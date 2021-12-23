@@ -7,13 +7,19 @@ contract Lottery {
     address payable[] public players;
     uint256 public usdEntryFee;
     AggregatorV3Interface internal ethUsdPriceFeed;
+    enum LOTTERY_STATE {
+        OPEN,
+        CLOSED,
+        CALCULATING_WINNER
+    }
 
-    constructor(address _priceFeedAddress) public {
+    constructor(address _priceFeedAddress) {
         usdEntryFee = 50 * (10**18);
         ethUsdPriceFeed = AggregatorV3Interface(_priceFeedAddress);
     }
 
     function enter() public payable {
+        require(msg.value >= getEntranceFee(), "Not enough ETH!");
         players.push(payable(msg.sender));
     }
 
