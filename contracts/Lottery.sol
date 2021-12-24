@@ -42,5 +42,16 @@ contract Lottery {
         lottery_state = LOTTERY_STATE.OPEN;
     }
 
-    function endLottery() public {}
+    function endLottery() public {
+        uint256(
+            keccak256(
+                abi.encodePacked(
+                    nonce, // is predictable aka transaction number
+                    msg.sender, // is predictable
+                    block.difficulty, // can actually be manipulated by the miners!
+                    block.timestamp // timestamp is predictable
+                )
+            )
+        ) % players.length;
+    }
 }
