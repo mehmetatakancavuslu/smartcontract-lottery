@@ -8,7 +8,7 @@ import time
 
 def deploy_lottery():
     account = get_account()
-    lottery = Lottery.deploy(
+    tx = lottery = Lottery.deploy(
         get_contract("eth_usd_price_feed").address,
         get_contract("vrf_coordinator").address,
         get_contract("link_token").address,
@@ -17,6 +17,7 @@ def deploy_lottery():
         {"from": account},
         publish_source=config["networks"][network.show_active()].get("verify", False),
     )
+    tx.wait(1)
     print("Deployed lottery!")
     return lottery
 
